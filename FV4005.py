@@ -42,6 +42,39 @@ async def ban_(ctx, user: discord.Member, reason= None):
         await channel.send(f"**{user}** has been banned for **{reason}**.")
 
 
+@bot.command(name='warn', help='Usage *warn @user reason', pass_context=True)
+@commands.has_permissions(kick_members=True)
+async def warn_(ctx, user: discord.Member, reason=None):
+    if not reason:
+        await ctx.send(f"**{user}** has been warned for **{reason}**.")
+        msg = ctx.message
+    else:
+        await ctx.send(f"**{user}** has been warned for **{reason}**.")
+        msg = ctx.message
+
+
+@bot.event
+async def on_message(message):
+    try:
+        banned_words = {"shit", "bitch", "fuck", "cunt", "nigger", "niger", "pussy", "gay", "jizz", "semen", "puss",
+                        "pussie", "gae", "bitches", "bitchin", "bitching", "dick", "dicks", "penis", "asshole", "ass",
+                        "hoe", "fucked", "fuckd", "bitched", "bitchd"}
+        for word in banned_words:
+            if word in message.content.lower():
+                await message.delete()
+                await message.channel.send("You said a no no word!! So I deleted it... WITH MY RAYGUN")
+    except Exception as e:
+        print(e)
+
+    try:
+        deleted_commands = {"*kick", "*ban", "*warn"}
+        for word in deleted_commands:
+            if word in message.content.lower():
+                await message.delete()
+    except Exception as e:
+        print(e)
+
+    await bot.process_commands(message)
 
 print("Server Running.")
 bot.run(token)
